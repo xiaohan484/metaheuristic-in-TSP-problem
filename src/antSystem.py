@@ -55,7 +55,6 @@ class AntSystem(TSP_Problem):
         #place the m ants on the n nodes
         shortestPath=[]
         shortestLength=100000000
-        fig=plt.figure()
 
 
         initTabu=[]
@@ -187,5 +186,6 @@ if __name__=='__main__':
     tsp=AntSystem()
     #tsp.readfile("qa194.tsp")
     tsp.readfile("qa194.tsp")
-    tsp.gothrough(100)
+    tsp.gothrough(5)
+    tsp.toExcel("antqal194.xlsx")
 

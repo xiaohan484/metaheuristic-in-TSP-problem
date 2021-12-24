@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import os
 import random
 import time
 #member 
@@ -21,7 +22,9 @@ class TSP_Problem:
             Lk+=self.Road[path[i-1]][path[i]]
         return Lk
     def readfile(self,filename):
-        with open(filename) as file:
+        curPath=os.path.dirname(__file__)
+        newPath=os.path.relpath('../tsp/'+filename,curPath)
+        with open(newPath) as file:
             des,name=file.readline().split(': ')
             read=file.readline()
             while(read!='NODE_COORD_SECTION\n'):
@@ -182,7 +185,10 @@ class TSP_Problem:
         data['iteration']=range(1,self.Time.__len__()+1)
         data['Time(seconds)']=self.Time
         data['shortest length']=self.solution
-        data.to_excel(filename,sheet_name='TSP')
+
+        curPath=os.path.dirname(__file__)
+        filePath=os.path.relpath('../Excel/'+filename,curPath)
+        data.to_excel(filePath,sheet_name=filename)
     def KmeanCluster(self):
         k=int(round(np.sqrt(len(self.Xs))+0.5))
         seed=[]
