@@ -54,7 +54,7 @@ class ImprovedAntColony(TSP_Problem):
         remain=[i for i in np.arange(1,paths[0].__len__()-1)]
         pathRand=[i for i in np.arange(1,int(paths.__len__()/2))]
         for i in np.arange(0,end,2):
-            choice=random.choices(paths,k=2)
+            choice=random.choices(paths,weights=randomWeight,k=2)
             
             p1=choice[0]
             p2=choice[1]
@@ -93,17 +93,18 @@ class ImprovedAntColony(TSP_Problem):
         Min=self.LenPath(new[0])
         minPath=new[0].copy()
 
-        paths=new
-        paths.extend(new)
-        paths.sort(key=lambda s:self.LenPath(s))
+        #paths=new
+        #paths.extend(new)
+        #paths.sort(key=lambda s:self.LenPath(s))
 
-        return paths,minPath,Min
+        return new,minPath,Min
     def LenPath(self,path):
         Lk=0
         for i in np.arange(1,path.__len__()):
             Lk+=self.Road[path[i-1]][path[i]]
         return Lk
     def gothrough(self,NC):
+        time=timeit.default_timer()
         alpha=0.1
         rho=0.1
         beta=2
@@ -127,7 +128,6 @@ class ImprovedAntColony(TSP_Problem):
         allList=set(i for i in np.arange(n))
 
 
-        time=timeit.default_timer()
 
         Change=False
         Road=np.array(self.Road,dtype=int)
@@ -145,6 +145,8 @@ class ImprovedAntColony(TSP_Problem):
 
 
         time=timeit.default_timer()-time
+        paths=[]
+        lenOfpaths=[]
         for t in np.arange(NC):
             stage1=timeit.default_timer()
             random.seed(datetime.now())
@@ -185,8 +187,6 @@ class ImprovedAntColony(TSP_Problem):
             currentShortestLength=100000000
             currentShortestPath=[]
 
-            paths=[]
-            lenOfpaths=[]
 
 
             for k in ant:
@@ -200,8 +200,9 @@ class ImprovedAntColony(TSP_Problem):
                 if currentShortestLength>Lk:
                     currentShortestPath=Path
                     currentShortestLength=Lk
-                paths.append(Path)
-                lenOfpaths.append(Lk)
+                if t==0:
+                    paths.append(Path)
+                    lenOfpaths.append(Lk)
             Tau=(1-alpha)*Tau
 
             stageOpt=timeit.default_timer()
@@ -217,11 +218,8 @@ class ImprovedAntColony(TSP_Problem):
 
             if(shortestLength!=self.LenPath(shortestPath)):
                 print('Wrong Before GA(*******************************************)')
-
-
             paths.append(shortestPath)
             lenOfpaths.append(shortestLength)
-
             #dTau=1/shortestLength
             #for i in np.arange(1,shortestPath.__len__()):
             #    x,y=shortestPath[i-1],shortestPath[i]
@@ -232,6 +230,11 @@ class ImprovedAntColony(TSP_Problem):
             paths,gaPath,gaLen=self.GA(paths)
             paths=paths[:m]
             gaLen=self.opt2_algorithm(gaPath,gaLen)
+
+            if shortestLength>gaLen:
+                shortestPath=gaPath
+                shortestLength=gaLen
+                print('--------------------GeneticAlgorithm---------------')
             
 
 

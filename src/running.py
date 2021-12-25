@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 
 
 if __name__=='__main__':
-    TSP_problem="xqf131"
-    NC=109
+    TSP_problem="pbm436"
+    NC=100
     fileName=TSP_problem+".tsp"
     
     tsp=ImprovedAntColony()

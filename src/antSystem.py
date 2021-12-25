@@ -42,6 +42,7 @@ class AntSystem(TSP_Problem):
                     NearestNeightbor=j
             List[i+1],List[NearestNeightbor]=List[NearestNeightbor],List[i+1]
     def gothrough(self,NC):
+        time=timeit.default_timer()
         alpha=1
         rho=0.5
         Q=100
@@ -63,11 +64,10 @@ class AntSystem(TSP_Problem):
         allList=set(i for i in np.arange(n))
 
 
-        time=0
         Change=False
         Road=np.array(self.Road,dtype=int)
         
-        Tau=[[0.1 for i in np.arange(n)] for i in np.arange(n)]
+        Tau=np.array([[0.1 for i in np.arange(n)] for i in np.arange(n)])
         tour=np.arange(1,n)
         ant=np.arange(m)
 
@@ -76,8 +76,9 @@ class AntSystem(TSP_Problem):
             IndexList[k].remove(k)
 
 
+        time=timeit.default_timer()-time
         for t in np.arange(NC):
-            dTau=[[0 for i in np.arange(n)] for i in np.arange(n)]
+            dTau=np.array([[0 for i in np.arange(n)] for i in np.arange(n)])
             stage1=timeit.default_timer()
             random.seed(datetime.now())
             Probabilities=Tau/Road**beta
@@ -134,9 +135,11 @@ class AntSystem(TSP_Problem):
                 paths.append(Path)
                 lenOfpaths.append(Lk)
             #Tau=(1-alpha)*Tau
-            for i in np.arange(n):
-                for j in np.arange(n):
-                    Tau[i][j]=rho*Tau[i][j]+dTau[i][j]
+            Tau=rho*Tau
+            Tau+=dTau
+            #for i in np.arange(n):
+            #    for j in np.arange(n):
+            #        Tau[i][j]=rho*Tau[i][j]+dTau[i][j]
 
             currentShortestLength=self.opt2_algorithm(currentShortestPath,currentShortestLength)
 
@@ -185,7 +188,7 @@ class AntSystem(TSP_Problem):
 if __name__=='__main__':
     tsp=AntSystem()
     #tsp.readfile("qa194.tsp")
-    tsp.readfile("qa194.tsp")
-    tsp.gothrough(5)
+    tsp.readfile("xqf131.tsp")
+    tsp.gothrough(100)
     tsp.toExcel("antqal194.xlsx")
 

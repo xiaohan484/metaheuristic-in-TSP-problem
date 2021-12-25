@@ -47,6 +47,7 @@ class AntColony(TSP_Problem):
             Lk+=self.Road[path[i-1]][path[i]]
         return Lk
     def gothrough(self,NC):
+        time=timeit.default_timer()
         alpha=0.1
         rho=0.1
         beta=2
@@ -62,7 +63,6 @@ class AntColony(TSP_Problem):
         #place the m ants on the n nodes
         shortestPath=[]
         shortestLength=100000000
-        fig=plt.figure()
 
 
         initTabu=[]
@@ -71,7 +71,6 @@ class AntColony(TSP_Problem):
         allList=set(i for i in np.arange(n))
 
 
-        time=0
         Change=False
         Road=np.array(self.Road,dtype=int)
         allList=[i for i in np.arange(n)]
@@ -83,6 +82,7 @@ class AntColony(TSP_Problem):
         tour=np.arange(1,n)
         ant=np.arange(m)
 
+        time=timeit.default_timer()-time
         for k in np.arange(n):
             IndexList.append(allList.copy())
             IndexList[k].remove(k)

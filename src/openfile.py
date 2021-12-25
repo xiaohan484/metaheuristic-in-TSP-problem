@@ -158,6 +158,7 @@ class TSP_Problem:
                 y=Yi-self.Ys[j]
                 self.Road[i][j]=(np.round(np.sqrt(x*x+y*y)))
     def draw(self,*paths):
+        return 
         plt.clf()
         plt.subplot(2,1,1)
         plt.xlabel('x-coordinate')

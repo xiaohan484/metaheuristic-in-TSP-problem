@@ -97,27 +97,26 @@ class GA(TSP_Problem):
         Min=self.LenPath(new[0])
         minPath=new[0].copy()
 
-        paths=new
-        paths.extend(new)
-        paths.sort(key=lambda s:self.LenPath(s))
+        #paths=new
+        #paths.extend(new)
+        #paths.sort(key=lambda s:self.LenPath(s))
 
-        return paths,minPath,Min
+        return new,minPath,Min
     def LenPath(self,path):
         Lk=0
         for i in np.arange(1,path.__len__()):
             Lk+=self.Road[path[i-1]][path[i]]
         return Lk
     def gothrough(self,NC):
+
+        time=timeit.default_timer()
         t=0
         n=self.Xs.__len__()
-        #Tau0=0.001
         m=20 #population
-        #m=self.Xs.__len__()
         shortestPath=[]
         shortestLength=100000000
         fig=plt.figure()
 
-        time=0
         Change=False
         Road=np.array(self.Road,dtype=int)
         path1,L=self.greedySearch(self.Road,n)
@@ -130,6 +129,7 @@ class GA(TSP_Problem):
             paths.append(path1.copy())
         
 
+        time=timeit.default_timer()-time
         for t in np.arange(NC):
             stage1=timeit.default_timer()
             paths,gapath,gaLen=self.GA(paths)
