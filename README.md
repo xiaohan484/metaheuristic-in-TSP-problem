@@ -184,9 +184,17 @@ To improved the algorithm we has two criterion:
 3. Using **splay tree** or other data structure to represent the tour([Data Structures for Traveling Salesmen](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.49.570&rep=rep1&type=pdf)) to speed up local search.
 ## Reference
 [Traveling Salesman Problem   -wikipedia](https://en.wikipedia.org/wiki/Travelling_salesman_problem)
+
 [Concorde TSP Solver   -wikipedia](https://en.wikipedia.org/wiki/Concorde_TSP_Solver)
+
 [Concorde Home](https://www.math.uwaterloo.ca/tsp/concorde.html)
+
+
 [Ant Colony Sytem](https://ieeexplore.ieee.org/abstract/document/585892)
+
 [Genetic Algorithm for Traveling Salesman Problem with Modified Cycle Crossover Operator](https://www.hindawi.com/journals/cin/2017/7430125/)
+
 [An Improved Genetic Algorithm for TSP](https://ieeexplore.ieee.org/abstract/document/4370274)
+
 [Data Structures for Traveling Salesmen](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.49.570&rep=rep1&type=pdf)
+
