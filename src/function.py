@@ -1,8 +1,17 @@
+import numpy as np
+import numba as nb
+from numba import jit
 
 def swap(List,indexA,indexB):
     temp=List[indexA]
     List[indexA]=List[indexB]
     List[indexB]=temp
+def opt2Find(k,Road,path,pi_1,pi):
+    pkp1=path[k+1]
+    pk=path[k]
+    link1=Road[pi_1][pi]+Road[pk][pkp1]
+    link2=Road[pi_1][pk]+Road[pi][pkp1]
+    return (link2<link1)
 
 def LK_Update(path,Road,IndexList,n):
     plen=len(path)

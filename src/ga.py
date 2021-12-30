@@ -35,6 +35,72 @@ class GA(TSP_Problem):
         path.append(0)
         L+=Road[cl][0]
         return path,L
+    def initialize(self,m):
+        Road=self.Road
+        cluster=self.KmeanCluster()
+        n=0
+        pair=[]
+        segmentPath=[]
+        for i in np.arange(cluster.__len__()):
+            if(cluster[i].__contains__(0)):
+                swap(cluster,0,i)
+                index=cluster[0].index(0)
+                swap(cluster[0],index,0)
+                break
+        for c in cluster:
+            tabu=[c[i] for i in np.arange(c.__len__())]
+            n+=c.__len__()
+            for cl in np.arange(0,c.__len__()-1):
+                prob=[Road[c[cl]][c[k]] for k in np.arange(cl+1,c.__len__()-1)]
+                if(len(prob)==0):
+                    break
+                choice=np.argmin(prob)
+                choice+=cl+1
+                swap(tabu,cl+1,choice)
+            Lk=self.LenPath(tabu)
+            Lk=self.opt2_algorithm(tabu,Lk)
+            segmentPath.append(tabu)
+
+
+        for i in np.arange(1,segmentPath.__len__()-1):
+            endPoint=segmentPath[i][-1]
+            pathResult=[self.pathDistance(endPoint,segmentPath[j],Road) for j in np.arange(i+1,segmentPath.__len__()-1)]
+            if(pathResult.__len__()==0):
+                break
+            choice=np.argmin(pathResult)
+            choice+=i+1
+            swap(segmentPath,i,choice)
+
+
+        path=[0 for i in np.arange(n+1)]
+        c=0
+        for p in segmentPath:
+            path[c:p.__len__()+c]=p
+            c+=p.__len__()
+        path[-1]=path[0]
+        for i in np.arange(1,len(path)):
+            p1=path[i]
+            p2=path[i-1]
+        Lk=self.LenPath(path)
+        Lk=self.opt2_algorithm(path,Lk)
+
+        pa=segmentPath[1:]
+        paths=[path]
+
+
+        for i in np.arange(m-1):
+            random.shuffle(pa)
+            pathGen=[0 for i in np.arange(n+1)]
+            pathGen[:segmentPath[0].__len__()]=segmentPath[0]
+            c=segmentPath[0].__len__()
+            for p in pa:
+                pathGen[c:p.__len__()+c]=p
+                c+=p.__len__()
+            pathGen[-1]=pathGen[0]
+            paths.append(pathGen.copy())
+
+        return paths,path,Lk
+
     def SortNearestAdjacengList(self,List,Road):
         for i in np.arange(List.__len__()-1):
             Nearest=Road[i][i+1]
@@ -44,6 +110,7 @@ class GA(TSP_Problem):
                     Nearest=Road[i][j]
                     NearestNeightbor=j
             List[i+1],List[NearestNeightbor]=List[NearestNeightbor],List[i+1]
+
     def GA(self,paths):
 
         selectRatio=0.5
@@ -102,11 +169,20 @@ class GA(TSP_Problem):
         #paths.sort(key=lambda s:self.LenPath(s))
 
         return new,minPath,Min
+
     def LenPath(self,path):
         Lk=0
         for i in np.arange(1,path.__len__()):
             Lk+=self.Road[path[i-1]][path[i]]
         return Lk
+    def pathDistance(self,endPoint,path,Road):
+        p1=path[0]
+        p2=path[-1]
+        d1=Road[endPoint][p1]
+        d2=Road[endPoint][p2]
+        if(d2<d1):
+            path.reverse()
+        return min(d1,d2)
     def gothrough(self,NC):
 
         time=timeit.default_timer()
@@ -119,14 +195,18 @@ class GA(TSP_Problem):
 
         Change=False
         Road=np.array(self.Road,dtype=int)
-        path1,L=self.greedySearch(self.Road,n)
-        p=path1[1:len(path1)-1]
-        paths=[path1.copy()]
+        paths,path1,L=self.initialize(m/2)
+        path2,L2=self.greedySearch(Road,n)
+        paths.append(path2)
+        #print(L2,' ',L)
+        
+        p2=path2[1:len(path2)-1]
 
-        for i in np.arange(1,m):
-            random.shuffle(p)
-            path1[1:len(path1)-1]=p
-            paths.append(path1.copy())
+
+        for i in np.arange(1,m/2):
+            random.shuffle(p2)
+            path2[1:len(path2)-1]=p2
+            paths.append(path2.copy())
         
 
         time=timeit.default_timer()-time
@@ -160,6 +240,6 @@ class GA(TSP_Problem):
 
 if __name__=='__main__':
     tsp=GA()
-    tsp.readfile("xqf131.tsp")
+    tsp.readfile("pbm436.tsp")
     tsp.gothrough(100)
 

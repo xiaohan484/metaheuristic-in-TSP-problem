@@ -147,6 +147,7 @@ class ImprovedAntColony(TSP_Problem):
         time=timeit.default_timer()-time
         paths=[]
         lenOfpaths=[]
+        support=[]
         for t in np.arange(NC):
             stage1=timeit.default_timer()
             random.seed(datetime.now())
@@ -215,6 +216,7 @@ class ImprovedAntColony(TSP_Problem):
                 shortestPath=currentShortestPath
                 shortestLength=currentShortestLength
                 print('>>>>>>>>>>>>>>>>>>>>AntColony<<<<<<<<<<<<<<<<<<<<<,')
+                support.append('antColony')
 
             if(shortestLength!=self.LenPath(shortestPath)):
                 print('Wrong Before GA(*******************************************)')
@@ -235,6 +237,7 @@ class ImprovedAntColony(TSP_Problem):
                 shortestPath=gaPath
                 shortestLength=gaLen
                 print('--------------------GeneticAlgorithm---------------')
+                support.append('GA')
             
 
 
@@ -273,6 +276,7 @@ class ImprovedAntColony(TSP_Problem):
             print(shortestLength)
             self.Time.append(time)
             self.solution.append(shortestLength)
+        print(support)
 
 
 

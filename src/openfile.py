@@ -17,9 +17,10 @@ class TSP_Problem:
     def IterInformation(self):
         return self.Time,self.solution
     def LenPath(self,path):
+        Road=self.Road
         Lk=0
         for i in np.arange(1,path.__len__()):
-            Lk+=self.Road[path[i-1]][path[i]]
+            Lk+=Road[path[i-1]][path[i]]
         return Lk
     def readfile(self,filename):
         curPath=os.path.dirname(__file__)
@@ -40,6 +41,7 @@ class TSP_Problem:
                 self.Ys.append(y)
                 Buffer=file.readline()
             self.linkRoad()
+
     def opt2_algorithm(self,path,Lk):
         bestDistance=Lk
         len=path.__len__()-1
@@ -47,11 +49,38 @@ class TSP_Problem:
 
         Road=self.Road
         iLen=np.arange(1,len)
-        while(True):
+        while(1):
             for i in iLen:
                 pi_1=path[i-1]
                 pi=path[i]
-                for k in np.arange(i+1,len):
+                for k in range(i+1,len):
+                    pkp1=path[k+1]
+                    pk=path[k]
+                    link1=Road[pi_1][pi]+Road[pk][pkp1]
+                    link2=Road[pi_1][pk]+Road[pi][pkp1]
+                    if(link2<link1):
+                        path[i:k+1]=reversed(path[i:k+1])
+                        Lk+=-link1+link2
+                        pi_1=path[i-1]
+                        pi=path[i]
+            #print(Lk)
+            if(bestDistance>Lk):
+                bestDistance=Lk
+            else:
+                break
+        return Lk
+    def opt2partial_algorithm(self,path,Lk,num):
+        bestDistance=Lk
+        len=path.__len__()-1
+        Break=False
+
+        Road=self.Road
+        iLen=np.arange(1,len)
+        while(1):
+            for i in iLen:
+                pi_1=path[i-1]
+                pi=path[i]
+                for k in range(i+1,min(len,i+num)):
                     pkp1=path[k+1]
                     pk=path[k]
                     link1=Road[pi_1][pi]+Road[pk][pkp1]
@@ -68,6 +97,76 @@ class TSP_Problem:
                 break
         return Lk
     def opt3_algorithm(self,path,Lk):
+        bestDistance=Lk
+        len=path.__len__()-1
+        Break=False
+        Road=self.Road
+        iLen=np.arange(1,len)
+
+        while(True):
+            for i in iLen:
+                nodeA=i-1
+                nodeB=i
+                pa=path[nodeA]
+                pb=path[nodeB]
+                for j in range(i+1,len-1):
+                    nodeC=j
+                    nodeD=j+1
+                    pc=path[nodeC]
+                    pd=path[nodeD]
+                    for k in range(j+2,len):
+                        nodeE=k
+                        nodeF=k+1
+                        pe=path[nodeE]
+                        pf=path[nodeF]
+
+                        d0=Road[pa][pb]+Road[pc][pd]+Road[pe][pf]
+                        d=[Road[pa][pc]+Road[pb][pe]+Road[pd][pf],\
+                        Road[pa][pd]+Road[pe][pb]+Road[pc][pf],\
+                        Road[pa][pd]+Road[pe][pc]+Road[pb][pf],\
+                        Road[pa][pe]+Road[pd][pb]+Road[pc][pf],\
+                        Road[pa][pb]+Road[pc][pe]+Road[pd][pf],\
+                        Road[pa][pc]+Road[pb][pd]+Road[pe][pf],\
+                        Road[pa][pe]+Road[pd][pc]+Road[pb][pf],\
+                        ]
+                        choice=np.argmin(d)
+
+                        if(d[choice]>=d0):
+                            continue
+                        else:
+                            if(choice==0):
+                                path[nodeB:nodeE+1]=list(reversed(path[nodeB:nodeC+1]))+list(reversed(path[nodeD:nodeE+1]))
+                            elif(choice==1):
+                                path[nodeB:nodeE+1]=path[nodeD:nodeE+1]+path[nodeB:nodeC+1]
+                            elif(choice==2):
+                                path[nodeB:nodeE+1]=path[nodeD:nodeE+1]+list(reversed(path[nodeB:nodeC+1]))
+                            elif(choice==3):
+                                path[nodeB:nodeE+1]=list(reversed(path[nodeD:nodeE+1]))+path[nodeB:nodeC+1]
+                            elif(choice==4):
+                                path[nodeD:nodeE+1]=reversed(path[nodeD:nodeE+1])
+                            elif(choice==5):
+                                path[nodeB:nodeC+1]=reversed(path[nodeB:nodeC+1])
+                            elif(choice==6):
+                                path[nodeB:nodeE+1]=reversed(path[nodeB:nodeE+1])
+
+
+                            Lk+=-d0+d[choice]
+                            pa=path[nodeA]
+                            pb=path[nodeB]
+                            pc=path[nodeC]
+                            pd=path[nodeD]
+                            break
+                            if(Lk!=self.LenPath(path)):
+                                print('something Wrong------------------------------------')
+                                print(Lk,' ',self.LenPath(path),' ',d0,' ',d[choice])
+                                sys.exit()
+            Break=False
+            if(bestDistance>Lk):
+                bestDistance=Lk
+            else:
+                break
+        return Lk
+    def opt3_algorithmOnce(self,path,Lk):
         bestDistance=Lk
         len=path.__len__()-1
         Break=False
@@ -102,7 +201,7 @@ class TSP_Problem:
                         ]
                         choice=np.argmin(d)
 
-                        if(d[choice]>d0):
+                        if(d[choice]>=d0):
                             continue
                         else:
                             if(choice==0):
@@ -131,15 +230,14 @@ class TSP_Problem:
                                 print('something Wrong------------------------------------')
                                 print(Lk,' ',self.LenPath(path),' ',d0,' ',d[choice])
                                 sys.exit()
-                            #Break=True
-                            #break
-                    #if(Break):
-                    #    break
-            Break=False
-            if(bestDistance>Lk):
-                bestDistance=Lk
-            else:
-                break
+                            Break=True
+                        if(Break):
+                            break
+                    if(Break):
+                        break
+                if(Break):
+                    break
+
         return Lk
     def show(self):
         plt.plot(self.Xs,self.Ys,'.')
@@ -158,7 +256,6 @@ class TSP_Problem:
                 y=Yi-self.Ys[j]
                 self.Road[i][j]=(np.round(np.sqrt(x*x+y*y)))
     def draw(self,*paths):
-        return 
         plt.clf()
         plt.subplot(2,1,1)
         plt.xlabel('x-coordinate')
