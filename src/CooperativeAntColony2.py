@@ -16,7 +16,7 @@ import collections as co
 #beta=1Y:
 #rho=0.5Y:
 #Q=100Y9
-class ImprovedAntColony(TSP_Problem):
+class CooperativeAntColony2(TSP_Problem):
     def __init__(self):
         super().__init__()
     def Lin_Kernighan(self,path):
@@ -116,6 +116,12 @@ class ImprovedAntColony(TSP_Problem):
                     Nearest=Road[i][j]
                     NearestNeightbor=j
             List[i+1],List[NearestNeightbor]=List[NearestNeightbor],List[i+1]
+    def mutual(self,path):
+        r=random.sample(range(1,path.__len__()-1,2),3)
+        r1,r2,r3=r[0],r[1],r[2]
+        path[r1:r2+1]=reversed(path[r1:r2+1])
+        path[r1:r3+1]=reversed(path[r1:r3+1])
+        return
     def crossOver(self,paths):
         end=round(paths.__len__()/2)
         new=[None for i in np.arange(end)]
@@ -269,25 +275,25 @@ class ImprovedAntColony(TSP_Problem):
         A=1
         Tmin=0
         Probabilities=(Tau**A)/(Road**beta)
-        eta=1/Road
-        #Probabilities=1/(Road**beta)
+        Probabilities2=1/(Road)
         pdec=0.05 ** (1/(n-1))
         for t in np.arange(NC):
             stage1=timeit.default_timer()
-            #Tmax=np.max(Tau)
-            #Tmin=(Tmax)*(1-pdec)/(n/2)/pdec
-            #Tau[Tau<Tau0/10]=Tau0/10
-            #Tau[Tau<Tmin]=Tmin
 
             probe/=20
+            for i in range(n):
+                probe[i][i]=0
             E=-np.sum([p*np.log(p) for p in probe[probe>0]])
             if(t==0):
                 Ep=1
             else:
                 Ep=E/Em
+            print(Ep)
 
 
             Probabilities=Tau**A/Road**beta
+            randomBeta=random.random()*1+1
+
             probe=np.zeros((n,n),float)
 
 
@@ -304,15 +310,15 @@ class ImprovedAntColony(TSP_Problem):
 
             stage2=timeit.default_timer()
 
-            if(t==0):
+            if(t!=0):
                 for k in range(round(m/2)):
                     for i in range(1,len(shortestPath)):
                         cl=shortestPath[i]
-                        inject=random.choices(np.arange(len(eta)),weights=eta[cl],k=10)
+                        inject=random.choices(np.arange(len(Probabilities2[cl])),weights=Probabilities2[cl],k=20)
                         if(choiceIndex in inject):
                             inject.remove(choiceIndex)
-                            Tau[choice][cl]=(1-rho)*Tau[choice][cl]+rho*Tau0*Q
-                            Tau[cl][choice]=(1-rho)*Tau[cl][choice]+rho*Tau0*Q
+                        Tau[choice][cl]=(1-rho)*Tau[choice][cl]+rho*Tau0*Q
+                        Tau[cl][choice]=(1-rho)*Tau[cl][choice]+rho*Tau0*Q
 
             for k in ant:
                 cl=tabu[k][0]
@@ -322,7 +328,6 @@ class ImprovedAntColony(TSP_Problem):
                     if q<q0 :
                         choiceIndex=np.argmax(Probability)
                         r=np.argmax(Probability)
-                        Probability[r]=0
                     else:
                         r=np.argmax(Probability)
                         Probability[r]=0
@@ -330,18 +335,12 @@ class ImprovedAntColony(TSP_Problem):
                     #inject
                     swap(tabu[k],s,s+choiceIndex)
                     choice=tabu[k][s]
+                    probe[cl][choice]+=1
                     cl=choice
                 for i in range(1,len(tabu[k])):
                     x=tabu[k][i-1]
                     y=tabu[k][i]
                     Tau[x][y]=(1-rho)*Tau[x][y]+rho*Tau0*Q
-
-
-
-
-
-
-
 
 
             #Conclude results
@@ -364,7 +363,6 @@ class ImprovedAntColony(TSP_Problem):
                 if currentShortestLength>Lk:
                     currentShortestPath=Path
                     currentShortestLength=Lk
-                if t==0:
                     paths.append(Path)
                     lenOfpaths.append(Lk)
 
@@ -373,8 +371,8 @@ class ImprovedAntColony(TSP_Problem):
             Tau=(1-alpha)*Tau
 
             stage3=timeit.default_timer()
-            currentShortestLength=self.Lin_Kernighan(currentShortestPath)
             #currentShortestLength=self.opt2_algorithm(currentShortestPath,currentShortestLength)
+            currentShortestLength=self.Lin_Kernighan(currentShortestPath)
             Change=False
 
 
@@ -396,8 +394,9 @@ class ImprovedAntColony(TSP_Problem):
 
             paths,gaPath,gaLen=self.GA(paths)
             paths=paths[:m]
-            gaLen=self.Lin_Kernighan(gaPath)
             #gaLen=self.opt2_algorithm(gaPath,gaLen)
+            gaLen=self.Lin_Kernighan(gaPath)
+            lastpa=gaPath.copy()
             stage5=timeit.default_timer()
 
 
@@ -458,7 +457,7 @@ class ImprovedAntColony(TSP_Problem):
 
 
 if __name__=='__main__':
-    tsp=ImprovedAntColony()
+    tsp=CooperativeAntColony2()
     tsp.readfile("xqf131.tsp")
     tsp.gothrough(100)
     tsp.toExcel("test.xlsx")

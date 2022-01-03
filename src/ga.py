@@ -195,18 +195,17 @@ class GA(TSP_Problem):
 
         Change=False
         Road=np.array(self.Road,dtype=int)
-        paths,path1,L=self.initialize(m/2)
-        path2,L2=self.greedySearch(Road,n)
-        paths.append(path2)
-        #print(L2,' ',L)
+        path,L2=self.greedySearch(Road,n)
+        paths=[]
+        paths.append(path)
         
-        p2=path2[1:len(path2)-1]
+        p2=path[1:len(path)-1]
 
 
         for i in np.arange(1,m/2):
             random.shuffle(p2)
-            path2[1:len(path2)-1]=p2
-            paths.append(path2.copy())
+            path[1:len(path)-1]=p2
+            paths.append(path.copy())
         
 
         time=timeit.default_timer()-time

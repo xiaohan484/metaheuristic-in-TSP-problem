@@ -285,6 +285,6 @@ class ImprovedAntColony(TSP_Problem):
 if __name__=='__main__':
     tsp=ImprovedAntColony()
     tsp.readfile("xqf131.tsp")
-    tsp.gothrough(100)
+    tsp.gothrough(200)
     tsp.toExcel("test.xlsx")
 

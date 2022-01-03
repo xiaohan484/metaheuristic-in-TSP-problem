@@ -14,6 +14,7 @@ class TSP_Problem:
         self.Time=[]
         self.solution=[]
         self.fig=plt.figure()
+        self.noDraw=False
     def IterInformation(self):
         return self.Time,self.solution
     def LenPath(self,path):
@@ -256,6 +257,8 @@ class TSP_Problem:
                 y=Yi-self.Ys[j]
                 self.Road[i][j]=(np.round(np.sqrt(x*x+y*y)))
     def draw(self,*paths):
+        if(self.noDraw):
+            return
         plt.clf()
         plt.subplot(2,1,1)
         plt.xlabel('x-coordinate')
