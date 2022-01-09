@@ -8,10 +8,9 @@ import matplotlib.pyplot as plt
 
 
 if __name__=='__main__':
-    TSP_problem="pbm436"
+    TSP_problem="xqf131"
     NC=100
     fileName=TSP_problem+".tsp"
-    
     for i in range(1,6):
         tsp=AntSystem()
         tsp.noDraw=True
@@ -47,5 +46,4 @@ if __name__=='__main__':
         tsp.gothrough(NC)
         tsp.toExcel(TSP_problem+"AntColony"+"exp"+str(i)+".xlsx")
         plt.close()
-
 

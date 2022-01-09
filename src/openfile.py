@@ -276,6 +276,7 @@ class TSP_Problem:
         self.drawTime()
         self.fig.canvas.flush_events()
         plt.pause(0.001)
+        plt.savefig('Result.png')
     def drawTime(self):
         plt.subplot(2,1,2)
         plt.xlabel('time(s)')
