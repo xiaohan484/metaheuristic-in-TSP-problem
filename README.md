@@ -57,11 +57,11 @@ Ant Colony System simmulate the real ant colony's behaviour to solve the TSP. In
 
 probability to choose the maximum pheromone in the path.
 
-<img src="https://user-images.githubusercontent.com/72375847/148683374-0a9c8009-07fd-423a-8135-4027d78e53bc.png" width=30% height=30%> 
+<img src="https://user-images.githubusercontent.com/72375847/148683374-0a9c8009-07fd-423a-8135-4027d78e53bc.png" width=40% height=40%> 
 
 Using the pheromone factor to chose the path.
 
-<img src="https://user-images.githubusercontent.com/72375847/148683431-a5c91eab-03a0-48c0-8351-f991b8c0a853.png" width=30% height=30%> 
+<img src="https://user-images.githubusercontent.com/72375847/148683431-a5c91eab-03a0-48c0-8351-f991b8c0a853.png" width=40% height=40%> 
 
 ```python=
 Probabilities=Tau/Road**beta
@@ -76,7 +76,8 @@ choiceIndex=random.choices(np.arange(len(Probability)),weights=Probability,k=1)[
 ```
 #### Pheromone Global Updating Rule:
 Using the best history solution to update pheromone, the ants will study best solution in next iteration.
-<img src="https://user-images.githubusercontent.com/72375847/148683444-7bd13e84-089d-4e5c-8399-3b627a6b11d2.png" width=30% height=30%> 
+<img src="https://user-images.githubusercontent.com/72375847/148683444-7bd13e84-089d-4e5c-8399-3b627a6b11d2.png" width=40% height=40%> 
+
 ```python=
  dTau=1/shortestLength
     for i in np.arange(1,shortestPath.__len__()):
@@ -86,12 +87,14 @@ Using the best history solution to update pheromone, the ants will study best so
 ```
 #### Local Updating Rule:
 Change behaviour of the current iteration, let next ant will study the ant solution before
-<img src="https://user-images.githubusercontent.com/72375847/148683438-5dfec035-481f-47bf-b475-c81e8fb1281c.png" width=30% height=30%> 
+<img src="https://user-images.githubusercontent.com/72375847/148683438-5dfec035-481f-47bf-b475-c81e8fb1281c.png" width=40% height=40%>
+
 ```python=
 ...#when choose a city, update local pheremone immediately
 Tau[cl][choice]=(1-rho)*Tau[cl][choice]+rho*Tau0
 ```
 #### Settings
+
 <img src="https://user-images.githubusercontent.com/72375847/148683450-6e57e991-4298-468c-8a9f-c50734fb3eb3.png" width=20% height=20%> 
 
 ### Genetic algorithm part
