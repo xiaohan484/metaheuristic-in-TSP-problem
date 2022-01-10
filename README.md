@@ -257,7 +257,7 @@ for j in range(2,len):
     gis=Road[pj][pj1]-Road[pi][pj]
     if(gi+gis>0 or gi>0):#if possible improve
         template=path.copy()
-        template[1:j+1]=template[j:0:-1
+        template[1:j+1]=template[j:0:-1]
         if(gi+gis>0):
             shortest=template.copy()#save the result
             Giopt=gi+gis
