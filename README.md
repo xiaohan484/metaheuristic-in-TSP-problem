@@ -309,5 +309,3 @@ if(bestDistance>self.LenPath(shortest)):
 [Genetic Algorithm for Traveling Salesman Problem with Modified Cycle Crossover Operator](https://www.hindawi.com/journals/cin/2017/7430125/)
 
 [An Improved Genetic Algorithm for TSP](https://ieeexplore.ieee.org/abstract/document/4370274)
-
-[Data Structures for Traveling Salesmen](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.49.570&rep=rep1&type=pdf)
