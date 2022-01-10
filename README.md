@@ -51,6 +51,7 @@ We implemented the several algorithm in TSP
 - genetic algorithm+ 2-opt
 - cooperative ant colony genetic algorithm+ 2-opt
 - cooperative ant colony genetic algorithm+ Lin-Kernighan algorithm
+
 corresponding .py files:
 - MillerTuckerZemlinFormulation.py
 - antSystem.py
@@ -59,14 +60,25 @@ corresponding .py files:
 - ImprovedAntColony.py
 - CooperativeAntColony2.py
 
-import this .py module and type:
-```python=
-tsp=CooperativeAntColony2()#Example: Cooperative Ant Colony
-tsp.readfile("xqf131.tsp")# .tsp file loading
-tsp.gothrough(100)#iteration numbers
+import .py module and type(except Miller Tucker Zemlin Formulation):
+```python
+from CooperativeAntColony2 import *#Example: Cooperative Ant Colony
+
+tsp=CooperativeAntColony2()   
+tsp.readfile("xqf131.tsp")    # .tsp file loading
+tsp.gothrough(100)        #iteration numbers
 tsp.toExcel('xqf131.xlsx')#save time,iteration,and tour length
-#when the program running, that will plot the diagram that the current tour or best-so-far tour in iteration
+#when the program running, it will plot the diagram that the current tour and best-so-far tour in iteration
+#if not want draw the diagram, using tsp.noDraw=True before gothrough function call
 ```
+
+Miller Tucker Zemlin Formulation 
+```python
+tsp=IntegerProgramming()
+tsp.readfile("dj38.tsp")
+tsp.modelerAndSolve()
+```
+Miller Tucker Zemlin Formulation is the simple TSP formulation that can be solve by pulp but we not introduce in class because that is too slow compare to other algorithm.(only dj38.tsp need 200 sec, if use in bigger problem we cannot wait it!)
 
 ## Cooperative Ant Colony Genetic Algorithm
 <img src="https://user-images.githubusercontent.com/72375847/148684181-59af771e-699f-46b1-9a58-b7d8e42995e8.png" width=10% height=10%>
@@ -103,18 +115,18 @@ choiceIndex=random.choices(np.arange(len(Probability)),weights=Probability,k=1)[
 Using the best history solution to update pheromone, the ants will study best solution in next iteration.
 <img src="https://user-images.githubusercontent.com/72375847/148683444-7bd13e84-089d-4e5c-8399-3b627a6b11d2.png" width=40% height=40%> 
 
-```python=
+```python
  dTau=1/shortestLength
-    for i in np.arange(1,shortestPath.__len__()):
-        x,y=shortestPath[i-1],shortestPath[i] # for all choice in shortest path
-        Tau[x][y]+=alpha*dTau# update pheromone
-        Tau[y][x]+=alpha*dTau
+for i in np.arange(1,shortestPath.__len__()):
+    x,y=shortestPath[i-1],shortestPath[i] # for all choice in shortest path
+    Tau[x][y]+=alpha*dTau# update pheromone
+    Tau[y][x]+=alpha*dTau
 ```
 #### Local Updating Rule:
 Change behaviour of the current iteration, let next ant will study the ant solution before
 <img src="https://user-images.githubusercontent.com/72375847/148683438-5dfec035-481f-47bf-b475-c81e8fb1281c.png" width=40% height=40%>
 
-```python=
+```python
 ...#when choose a city, update local pheremone immediately
 Tau[cl][choice]=(1-rho)*Tau[cl][choice]+rho*Tau0
 ```
@@ -133,7 +145,6 @@ That properly has 3 step:
     - slightly change current solution to make new solution
 Genetic algorithm belive the better solution can be make from good solutions or slightly changing in good solution.
 
-In Our algorithm,
 1. [Cycle Crossover Operator(CX2)](https://www.hindawi.com/journals/cin/2017/7430125/)
     1. Select 1st bit from second parent as 1st bit of offspring
     2.
@@ -146,7 +157,7 @@ In Our algorithm,
         -  pick the exact same position bit which is in second parent as the next bit for first offspring
     4. Repeat step 2-3 untill 1st bit of first parent will not come in second offspring
     5. If some bits are left, Repeating step 1-4 otherwise the algorithm end.
-```python=
+```python
 o1[1]=p2[1]# Step 1 O is the child and p is parent
 P2[1]=True# P is checker that check the city is in child
 o2[1]=p2[p1.index(p2[p1.index(o1[1])])]
@@ -180,7 +191,7 @@ for i in np.arange(0,end,2):
 ### 2-opt algorithm
 2-opt algorithm is quite easy, the idea's is switch two link to improve solution.
 
-```python=
+```python
 while(True):
     for i in iLen:
         pi_1=path[i-1]
@@ -208,18 +219,18 @@ while(True):
 ### Lin-Kernighan algorithm
 Simple Description:
 1. Choose a link that will be remove
-```python=
+```python
 for i in iLen:
-            key=path[1]
-            path[:len]=path[1:]
-            path[-1]=key
-            pi=path[0]
-            pi1=path[1]
-            k=-1
-            count=0
+    key=path[1]
+    path[:len]=path[1:]
+    path[-1]=key
+    pi=path[0]
+    pi1=path[1]
+    k=-1
+    count=0
 ```
 2. chooce another link that added can reduce the tour length
-```python=
+```python
 for j in range(2,len):
     Gi=0
     Giopt=0
@@ -238,7 +249,7 @@ for j in range(2,len):
 ```
 
 3. Repeat remove link and add link until check all possible link
-```python=
+```python
  while j<len:#remove k- k+1 and add j- j+1 link
         pj=path[j]
         pj1=path[j+1]
@@ -261,7 +272,7 @@ for j in range(2,len):
         break
 ```
 4. check any improve,if has any improve repeat the process 1-3
-```python=
+```python
 if(bestDistance>self.LenPath(shortest)):
                 bestDistance=self.LenPath(shortest)
             else:
