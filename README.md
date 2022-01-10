@@ -43,7 +43,32 @@ Similar algorithms a k-opt algorithm(2-opt,3-opt algorithm):
 - Particle swap algorithm
 - Simulated annealing
 
-## Cooperative genetic ant system
+## How to use the program
+We implemented the several algorithm in TSP
+- Miller Tucker Zemlin Formulation by pulp
+- ant system+ 2-opt
+- ant colony+ 2-opt
+- genetic algorithm+ 2-opt
+- cooperative ant colony genetic algorithm+ 2-opt
+- cooperative ant colony genetic algorithm+ Lin-Kernighan algorithm
+corresponding .py files:
+- MillerTuckerZemlinFormulation.py
+- antSystem.py
+- antColony.py
+- ga.py
+- ImprovedAntColony.py
+- CooperativeAntColony2.py
+
+import this .py module and type:
+```python=
+tsp=CooperativeAntColony2()#Example: Cooperative Ant Colony
+tsp.readfile("xqf131.tsp")# .tsp file loading
+tsp.gothrough(100)#iteration numbers
+tsp.toExcel('xqf131.xlsx')#save time,iteration,and tour length
+#when the program running, that will plot the diagram that the current tour or best-so-far tour in iteration
+```
+
+## Cooperative Ant Colony Genetic Algorithm
 <img src="https://user-images.githubusercontent.com/72375847/148684181-59af771e-699f-46b1-9a58-b7d8e42995e8.png" width=10% height=10%>
 
 ### Ant Colony System part
