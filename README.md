@@ -74,11 +74,29 @@ tsp.toExcel('xqf131.xlsx')#save time,iteration,and tour length
 
 Miller Tucker Zemlin Formulation 
 ```python
-tsp=IntegerProgramming()
-tsp.readfile("dj38.tsp")
-tsp.modelerAndSolve()
+from MillerTuckerZemlinFormulation import *
+tsp=IntegerProgramming() 
+tsp.readfile("dj38.tsp")#data loading
+tsp.modelerAndSolve()#solve by pulp
 ```
-Miller Tucker Zemlin Formulation is the simple TSP formulation that can be solve by pulp but we not introduce in class because that is too slow compare to other algorithm.(only dj38.tsp need 200 sec, if use in bigger problem we cannot wait it!)
+
+Miller Tucker Zemlin Formulation is the simple Integer programming formulation that can be solve by pulp but we not introduce in class because that is too slow compare to other algorithm.(only dj38.tsp need 200 sec, if use in bigger problem we cannot wait it!)
+
+## Basic Problem Representation 
+Array Implementation:
+The Starting city is equal than ending city.
+|order| 0 | 1 | 2 | 3 | 4 | 5 | 6 |
+|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+| city on the path | 0 | 3 | 1 | 4 | 5 | 2 | 0 |
+|<|<|tabu| <|current|>|candidate list|>|
+
+### If using the ant related algorithm
+- If the ant is running on the path
+    - variable "current" to record the city its choose.
+- Before the "current"
+    -  tabu list that can not be choose.(arrived)
+- After the "current" cities
+    - the candidate list the the can can be choose.
 
 ## Cooperative Ant Colony Genetic Algorithm
 <img src="https://user-images.githubusercontent.com/72375847/148684181-59af771e-699f-46b1-9a58-b7d8e42995e8.png" width=10% height=10%>
@@ -90,23 +108,22 @@ Ant Colony System simmulate the real ant colony's behaviour to solve the TSP. In
 3. Finally, the ants will always using some paths to find food.
 
 #### The probability of Ant decide path:
-<img src="https://user-images.githubusercontent.com/72375847/148683380-d8b12b94-187d-4e15-a294-1baba02a1c37.png" width=30 height=30> 
+<img src="https://user-images.githubusercontent.com/72375847/148683380-d8b12b94-187d-4e15-a294-1baba02a1c37.png" width=30 height=20>  probability to choose the maximum pheromone in the path.
 
-probability to choose the maximum pheromone in the path.
-
-<img src="https://user-images.githubusercontent.com/72375847/148683374-0a9c8009-07fd-423a-8135-4027d78e53bc.png" width=40% height=40%> 
+<img src="https://user-images.githubusercontent.com/72375847/148683374-0a9c8009-07fd-423a-8135-4027d78e53bc.png" width=60% height=60%>  
 
 Using the pheromone factor to chose the path.
 
 <img src="https://user-images.githubusercontent.com/72375847/148683431-a5c91eab-03a0-48c0-8351-f991b8c0a853.png" width=40% height=40%> 
 
-```python=
-Probabilities=Tau/Road**beta
+```python
+Probabilities=Tau/Road**beta # probability matrix
 ...
 ...#choose next city
-if q<q0 :
+Probability=Probabilities[cl][tabu[k][s:n]] #choose the candidate list's probability
+if q<q0 :# using best path
     choiceIndex=np.argmax(Probability)
-else:
+else:#exploit another path
     r=np.argmax(Probability)
     Probability[r]=0
 choiceIndex=random.choices(np.arange(len(Probability)),weights=Probability,k=1)[0]
@@ -116,7 +133,7 @@ Using the best history solution to update pheromone, the ants will study best so
 <img src="https://user-images.githubusercontent.com/72375847/148683444-7bd13e84-089d-4e5c-8399-3b627a6b11d2.png" width=40% height=40%> 
 
 ```python
- dTau=1/shortestLength
+dTau=1/shortestLength
 for i in np.arange(1,shortestPath.__len__()):
     x,y=shortestPath[i-1],shortestPath[i] # for all choice in shortest path
     Tau[x][y]+=alpha*dTau# update pheromone
