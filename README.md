@@ -149,7 +149,7 @@ Tau[cl][choice]=(1-rho)*Tau[cl][choice]+rho*Tau0
 ```
 #### Settings
 
-<img src="https://user-images.githubusercontent.com/72375847/148683450-6e57e991-4298-468c-8a9f-c50734fb3eb3.png" width=20% height=20%> 
+<img src="https://user-images.githubusercontent.com/72375847/148683450-6e57e991-4298-468c-8a9f-c50734fb3eb3.png" width=10% height=10%> 
 
 ### Genetic algorithm part
 Genetic algorithm is the idea's that is using the good solutions to produce next generation solutions to find better solutions.
